@@ -1,0 +1,10 @@
+c:\lesson\TinyApp\TinyApp\bin\Debug\TinyApp.exe
+c:\lesson\TinyApp\TinyApp\bin\Debug\TinyApp.pdb
+c:\lesson\TinyApp\TinyApp\bin\Debug\GHIElectronics.TinyCLR.BrainPad.dll
+c:\lesson\TinyApp\TinyApp\bin\Debug\GHIElectronics.TinyCLR.Core.dll
+c:\lesson\TinyApp\TinyApp\bin\Debug\GHIElectronics.TinyCLR.Devices.dll
+c:\lesson\TinyApp\TinyApp\bin\Debug\GHIElectronics.TinyCLR.Drawing.dll
+c:\lesson\TinyApp\TinyApp\bin\Debug\GHIElectronics.TinyCLR.Pins.dll
+c:\lesson\TinyApp\TinyApp\obj\Debug\TinyApp.csprojResolveAssemblyReference.cache
+c:\lesson\TinyApp\TinyApp\obj\Debug\TinyApp.exe
+c:\lesson\TinyApp\TinyApp\obj\Debug\TinyApp.pdb
