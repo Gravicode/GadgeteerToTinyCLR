@@ -132,6 +132,29 @@
             public const int Pwm7 = 0;
             public const int Pwm8 = 1;
             public const int Pwm9 = 2;
+            public static class PwmPin
+            {
+                public static class Controller0
+                {
+                    public const string Id = "CON0";
+                    public const int PC18 = 0;
+                }
+                public static class Controller1
+                {
+                    public const string Id = "CON1";
+                    public const int PC19 = 0;
+                }
+                public static class Controller2
+                {
+                    public const string Id = "CON2";
+                    public const int PC20 = 0;
+                }
+                public static class Controller3
+                {
+                    public const string Id = "CON3";
+                    public const int PC21 = 0;
+                }
+            }
         }
 
         public static class Socket2
