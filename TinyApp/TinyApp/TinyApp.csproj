@@ -66,6 +66,7 @@
     <Compile Include="Modules\DisplayT35.cs" />
     <Compile Include="Modules\GasSense.cs" />
     <Compile Include="Modules\Joystick.cs" />
+    <Compile Include="Modules\Led7C.cs" />
     <Compile Include="Modules\LEDStrip.cs" />
     <Compile Include="Modules\LightSense.cs" />
     <Compile Include="Modules\SerialCameraL1.cs" />
