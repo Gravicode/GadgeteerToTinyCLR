@@ -1,21 +1,74 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading;
 using Gadgeteer.Modules.GHIElectronics;
 using GHI.Pins;
-using System.Diagnostics;
 using TinyApp.Properties;
-using System.Drawing;
-using System.IO;
-using System.Drawing.Imaging;
+using G400S = GHIElectronics.TinyCLR.Pins.G400S;
 
 namespace TinyApp
 {
     public class Program
     {
-
         public static void Main()
         {
+            // TestAccelG248();
+            // TestACS712();
+            // TestCamera();
+            // TestLed7C();
+            // TestDisplayNhvn();
+        }
+
+        #region Testing
+
+        private static void TestAccelG248()
+        {
+            var accel = new AccelG248(FEZRaptor.I2cBus.I2c1);
+            while (true)
+            {
+                Debug.WriteLine(accel.GetAcceleration().ToString());
+                Thread.Sleep(200);
+            }
+        }
+
+        private static void TestACS712()
+        {
+            var curSensor = new CurrentACS712(FEZRaptor.Socket13.AnalogInput5);
+            while (true)
+            {
+                Debug.WriteLine($"current : {curSensor.ReadACCurrent()}");
+                Thread.Sleep(500);
+            }
+        }
+
+        private static void TestButton()
+        {
+            //test button, light sense, gas sense, temp humid
+            var btn = new Button(FEZRaptor.Socket18.Pin3, FEZRaptor.Socket18.Pin4);
+            var light = new LightSense(FEZRaptor.Socket2.AnalogInput3);
+            var gas = new GasSense(FEZRaptor.Socket14.AnalogInput3, FEZRaptor.Socket14.Pin4);
+            var TempSensor = new TempHumidSI70(G400S.I2cBus.I2c1);
+
+            while (true)
+            {
+                if (btn.Pressed)
+                    Debug.WriteLine("button is pressed");
+                else
+                    Debug.WriteLine("button is not pressed");
+                Debug.WriteLine($"light : {light.GetIlluminance()}");
+                Debug.WriteLine($"gas : {gas.ReadProportion()}");
+                Debug.WriteLine(
+                    $"temp n humid : {TempSensor.TakeMeasurement().Temperature} - {TempSensor.TakeMeasurement().RelativeHumidity}");
+                Thread.Sleep(200);
+            }
+        }
+
+        private static void TestCamera()
+        {
             //Graphics
-            /*
+
             var Lcd = new DisplayT35(FEZRaptor.Socket16.Pin9);
             var background = Resources.GetBitmap(Resources.BitmapResources.nature);
             var font = Resources.GetFont(Resources.FontResources.small);
@@ -50,73 +103,13 @@ namespace TinyApp
                 }
                 Thread.Sleep(200);
             }
-            */
-            //TestLed7C();
-            var Lcd = new DisplayNHVN(FEZRaptor.I2cBus.I2c1,FEZRaptor.Socket16.Pin9,FEZRaptor.Socket13.Pin3,DisplayNHVN.DisplayTypes.Display7inch);
-            var background = Resources.GetBitmap(Resources.BitmapResources.car);
-            var font = Resources.GetFont(Resources.FontResources.NinaB);
-            Lcd.Screen.DrawImage(background, 0, 0);
-
-            Lcd.Screen.DrawString("Hello, world", font, new SolidBrush(Color.White), 10, 400);
-            Lcd.Screen.Flush();
-            Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased; ;
-            Thread.Sleep(Timeout.Infinite);
         }
 
-        private static void Lcd_CapacitiveScreenReleased(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
+        private static void TestCharDisplay()
         {
-            Debug.WriteLine("you touch the lcd");
-
-        }
-
-        private static void Lcd_CapacitiveScreenPressed(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
-        {
-            Debug.WriteLine("you touch the lcd");
-        }
-
-
-        /*
-        #region Testing
-        static void TestACS712()
-        {
-            var curSensor = new CurrentACS712(FEZRaptor.Socket13.AnalogInput5);
-            while (true)
-            {
-                Debug.WriteLine($"current : {curSensor.ReadACCurrent()}");
-                Thread.Sleep(500);
-            }
-        }
-        static void TestGyro(){
-             var gyro = new Gyro(FEZRaptor.I2cBus.I2c1);
-            gyro.MeasurementComplete += (Gyro sender, Gyro.MeasurementCompleteEventArgs e)=>
-            {
-                Debug.WriteLine(e.ToString());
-            };
-            gyro.StartTakingMeasurements();
-            Thread.Sleep(Timeout.Infinite);
-        }
-        static void TestAccelG248()
-        {
-            var accel = new AccelG248(FEZRaptor.I2cBus.I2c1);
-            while (true)
-            {
-                Debug.WriteLine(accel.GetAcceleration().ToString());
-                Thread.Sleep(200);
-            }
-        }
-        static void TestRotary()
-        {
-            var rotary = new RotaryH1(FEZRaptor.Socket17.Pin5, FEZRaptor.Socket17.Pin6, FEZRaptor.Socket17.Pin7, FEZRaptor.Socket17.Pin8, FEZRaptor.Socket17.Pin9);
-            while (true)
-            {
-                Debug.WriteLine($"dir : {rotary.GetDirection()}, count : {rotary.GetCount()}");
-                Thread.Sleep(200);
-            }
-
-        }
-        static void TestCharDisplay()
-        {
-            var characterDisp = new CharacterDisplay(FEZRaptor.Socket1.Pin3, FEZRaptor.Socket1.Pin4, FEZRaptor.Socket1.Pin5, FEZRaptor.Socket1.Pin6, FEZRaptor.Socket1.Pin7, FEZRaptor.Socket1.Pin8, FEZRaptor.Socket1.Pin9);
+            var characterDisp = new CharacterDisplay(FEZRaptor.Socket1.Pin3, FEZRaptor.Socket1.Pin4,
+                FEZRaptor.Socket1.Pin5, FEZRaptor.Socket1.Pin6, FEZRaptor.Socket1.Pin7, FEZRaptor.Socket1.Pin8,
+                FEZRaptor.Socket1.Pin9);
             characterDisp.Print("Hellow world...");
             characterDisp.BacklightEnabled = true;
             Thread.Sleep(5000);
@@ -124,20 +117,37 @@ namespace TinyApp
             characterDisp.Print("Hurrayyy...");
             Thread.Sleep(Timeout.Infinite);
         }
-        static void TestJoystick()
+
+        #region TestDisplayNhvn
+        private static void Lcd_CapacitiveScreenPressed(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
         {
-            var joystik = new Joystick(FEZRaptor.Socket2.AnalogInput4, FEZRaptor.Socket2.AnalogInput5, FEZRaptor.Socket2.Pin3);
-            while (true)
-            {
-                Debug.WriteLine($"pos:{joystik.GetPosition().X} - { joystik.GetPosition().Y}");
-                Thread.Sleep(200);
-            }
-            
+            Debug.WriteLine("you touch the lcd");
         }
 
-        static void TestDisplayT35()
+        private static void Lcd_CapacitiveScreenReleased(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
         {
-            var joystik = new Joystick(FEZRaptor.Socket2.AnalogInput4, FEZRaptor.Socket2.AnalogInput5, FEZRaptor.Socket2.Pin3);
+            Debug.WriteLine("you touch the lcd");
+        }
+
+        private static void TestDisplayNhvn()
+        {
+            var Lcd = new DisplayNHVN(FEZRaptor.I2cBus.I2c1, FEZRaptor.Socket16.Pin9, FEZRaptor.Socket13.Pin3,
+                DisplayNHVN.DisplayTypes.Display7inch);
+            var background = Resources.GetBitmap(Resources.BitmapResources.car);
+            var font = Resources.GetFont(Resources.FontResources.NinaB);
+            Lcd.Screen.DrawImage(background, 0, 0);
+
+            Lcd.Screen.DrawString("Hello, world", font, new SolidBrush(Color.White), 10, 400);
+            Lcd.Screen.Flush();
+            Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased;
+            ;
+            Thread.Sleep(Timeout.Infinite);
+        }
+        #endregion
+        private static void TestDisplayT35()
+        {
+            var joystik = new Joystick(FEZRaptor.Socket2.AnalogInput4, FEZRaptor.Socket2.AnalogInput5,
+                FEZRaptor.Socket2.Pin3);
             var Lcd = new DisplayT35(FEZRaptor.Socket16.Pin9);
             var background = Resources.GetBitmap(Resources.BitmapResources.nature);
             var font = Resources.GetFont(Resources.FontResources.small);
@@ -177,55 +187,31 @@ namespace TinyApp
             }
             Thread.Sleep(Timeout.Infinite);
         }
-       
-        static void TestLed7R()
-        {
-            //test led strip
-            var pins = new int[] { FEZRaptor.Socket18.Pin3, FEZRaptor.Socket18.Pin4, FEZRaptor.Socket18.Pin5,
-            FEZRaptor.Socket18.Pin6,FEZRaptor.Socket18.Pin7,FEZRaptor.Socket18.Pin8,FEZRaptor.Socket18.Pin9};
-            var LedStrip = new LEDStrip(pins);
-            int counter = 0;
-            while (true)
-            {
-                LedStrip.SetLeds(counter);
-                if (counter >= LedStrip.LedCount) counter = 0;
-                counter++;
-                Thread.Sleep(200);
-            }
-        }
-        static void TestButton()
-        {
-            
-            //test button, light sense, gas sense, temp humid
-            Button btn = new Button(FEZRaptor.Socket18.Pin3, FEZRaptor.Socket18.Pin4);
-            LightSense light = new LightSense(FEZRaptor.Socket2.AnalogInput3);
-            GasSense gas = new GasSense(FEZRaptor.Socket14.AnalogInput3, FEZRaptor.Socket14.Pin4);
-            TempHumidSI70 TempSensor = new TempHumidSI70(GHIElectronics.TinyCLR.Pins.G400S.I2cBus.I2c1);
-                         
-            while (true)
-            {
 
-                if (btn.Pressed)
-                {
-                    Debug.WriteLine("button is pressed");
-                }
-                else
-                {
-                    Debug.WriteLine("button is not pressed");
-                }
-                Debug.WriteLine($"light : {light.GetIlluminance()}");
-                Debug.WriteLine($"gas : {gas.ReadProportion()}");
-                Debug.WriteLine($"temp n humid : {TempSensor.TakeMeasurement().Temperature} - {TempSensor.TakeMeasurement().RelativeHumidity}");
+        private static void TestGyro()
+        {
+            var gyro = new Gyro(FEZRaptor.I2cBus.I2c1);
+            gyro.MeasurementComplete += (sender, e) => { Debug.WriteLine(e.ToString()); };
+            gyro.StartTakingMeasurements();
+            Thread.Sleep(Timeout.Infinite);
+        }
+        private static void TestJoystick()
+        {
+            var joystik = new Joystick(FEZRaptor.Socket2.AnalogInput4, FEZRaptor.Socket2.AnalogInput5,
+                FEZRaptor.Socket2.Pin3);
+            while (true)
+            {
+                Debug.WriteLine($"pos:{joystik.GetPosition().X} - {joystik.GetPosition().Y}");
                 Thread.Sleep(200);
             }
-            
         }
+
         /// <summary>
-        /// Led7C Test
+        ///     Led7C Test
         /// </summary>
-        static void TestLed7C()
+        private static void TestLed7C()
         {
-            int delay = 1000;
+            var delay = 1000;
             var led7C = new Led7C(FEZRaptor.Socket12.Pin3, FEZRaptor.Socket12.Pin4, FEZRaptor.Socket12.Pin5);
             led7C.SetColor(Led7C.Color.Blue);
             Thread.Sleep(delay);
@@ -244,14 +230,45 @@ namespace TinyApp
             led7C.SetColor(Led7C.Color.White);
             Thread.Sleep(delay);
         }
-        
-        /// <summary>
-        /// Tunes test
-        /// </summary>
-        static void TestTunes()
+
+        private static void TestLed7R()
         {
-            var melody = new Gadgeteer.Modules.GHIElectronics.Tunes.Melody();
-            Tunes.MusicNote note = new Tunes.MusicNote(Tunes.Tone.C4, 400);
+            //test led strip
+            var pins = new[]
+            {
+                FEZRaptor.Socket18.Pin3, FEZRaptor.Socket18.Pin4, FEZRaptor.Socket18.Pin5,
+                FEZRaptor.Socket18.Pin6, FEZRaptor.Socket18.Pin7, FEZRaptor.Socket18.Pin8, FEZRaptor.Socket18.Pin9
+            };
+            var LedStrip = new LEDStrip(pins);
+            var counter = 0;
+            while (true)
+            {
+                LedStrip.SetLeds(counter);
+                if (counter >= LedStrip.LedCount) counter = 0;
+                counter++;
+                Thread.Sleep(200);
+            }
+        }
+
+        private static void TestRotary()
+        {
+            var rotary = new RotaryH1(FEZRaptor.Socket17.Pin5, FEZRaptor.Socket17.Pin6, FEZRaptor.Socket17.Pin7,
+                FEZRaptor.Socket17.Pin8, FEZRaptor.Socket17.Pin9);
+            while (true)
+            {
+                Debug.WriteLine($"dir : {rotary.GetDirection()}, count : {rotary.GetCount()}");
+                Thread.Sleep(200);
+            }
+        }
+
+        #region TestTunes
+        /// <summary>
+        ///     Tunes test
+        /// </summary>
+        private static void TestTunes()
+        {
+            var melody = new Tunes.Melody();
+            var note = new Tunes.MusicNote(Tunes.Tone.C4, 400);
 
             melody.Add(note);
 
@@ -296,14 +313,12 @@ namespace TinyApp
             tunes.Play(melody);
         }
 
-        static Tunes.MusicNote PlayNote(Tunes.Tone tone)
+        private static Tunes.MusicNote PlayNote(Tunes.Tone tone)
         {
-            Tunes.MusicNote note = new Tunes.MusicNote(tone, 200);
-
+            var note = new Tunes.MusicNote(tone, 200);
             return note;
         }
         #endregion
-        */
+        #endregion
     }
-
 }
