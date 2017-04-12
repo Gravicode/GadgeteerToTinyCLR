@@ -42,6 +42,7 @@ namespace TinyApp.Properties
         [System.SerializableAttribute()]
         internal enum BitmapResources : short
         {
+            car = 17810,
             nature = 23172,
         }
     }

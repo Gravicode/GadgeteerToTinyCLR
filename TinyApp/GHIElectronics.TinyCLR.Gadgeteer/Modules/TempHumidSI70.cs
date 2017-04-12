@@ -33,7 +33,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
             //Setting.BusSpeed = I2cBusSpeed.StandardMode; // 100kHz
             // Or
             Setting.BusSpeed = I2cBusSpeed.FastMode; // 400kHz
-            Debug.WriteLine("jumlah device : "+Devices.Length);
+            //Debug.WriteLine("jumlah device : "+Devices.Length);
             i2c = I2cDevice.FromId(Devices[0].Id, Setting);
 
             this.writeBuffer1 = new byte[1] { TempHumidSI70.MEASURE_HUMIDITY_HOLD };

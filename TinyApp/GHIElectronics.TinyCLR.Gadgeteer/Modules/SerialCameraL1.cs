@@ -88,8 +88,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
             //socket.EnsureTypeIsSupported('U', this);
 
             //this.port = GTI.SerialFactory.Create(socket, 115200, GTI.SerialParity.None, GTI.SerialStopBits.One, 8, GTI.HardwareFlowControl.NotRequired, this);
-			this.port.ReadTimeout = new TimeSpan(500);
-			this.port.WriteTimeout = new TimeSpan(500);
+			this.port.ReadTimeout = new TimeSpan(0,0,0,0,500);
+			this.port.WriteTimeout = new TimeSpan(0,0,0,0,500);
 			//this.port.Open();
             
 			this.ResetCamera();

@@ -4,19 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{519D1A1B-50C2-4AD9-A551-5AC3E1D02E8B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>TinyApp</RootNamespace>
-    <AssemblyName>TinyApp</AssemblyName>
+    <ProjectGuid>{8DBC7A2D-EBD8-490C-B315-8A6053524E92}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GHIElectronics.TinyCLR.Gadgeteer</RootNamespace>
+    <AssemblyName>GHIElectronics.TinyCLR.Gadgeteer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NoStdLib>true</NoStdLib>
     <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
     <ProjectTypeGuids>{A1948822-69DD-4150-919B-F3F42EFB71CC};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +25,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,27 +33,50 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Gadgeteer\Modules\Module.cs" />
+    <Compile Include="GHI PINS\EMX.cs" />
+    <Compile Include="GHI PINS\FEZCerb40II.cs" />
+    <Compile Include="GHI PINS\FEZCerberus.cs" />
+    <Compile Include="GHI PINS\FEZCerbuinoBee.cs" />
+    <Compile Include="GHI PINS\FEZCerbuinoNet.cs" />
+    <Compile Include="GHI PINS\FEZCobraII.cs" />
+    <Compile Include="GHI PINS\FEZCobraIII.cs" />
+    <Compile Include="GHI PINS\FEZHydra.cs" />
+    <Compile Include="GHI PINS\FEZLemur.cs" />
+    <Compile Include="GHI PINS\FEZMedusaII.cs" />
+    <Compile Include="GHI PINS\FEZPandaIII.cs" />
+    <Compile Include="GHI PINS\FEZRaptor.cs" />
+    <Compile Include="GHI PINS\FEZReaper.cs" />
+    <Compile Include="GHI PINS\FEZSpider.cs" />
+    <Compile Include="GHI PINS\FEZSpiderII.cs" />
+    <Compile Include="GHI PINS\G120.cs" />
+    <Compile Include="GHI PINS\G120E.cs" />
+    <Compile Include="GHI PINS\G30.cs" />
+    <Compile Include="GHI PINS\G30HDR.cs" />
+    <Compile Include="GHI PINS\G400.cs" />
+    <Compile Include="GHI PINS\G400D.cs" />
+    <Compile Include="GHI PINS\G400S.cs" />
+    <Compile Include="GHI PINS\G80.cs" />
+    <Compile Include="GHI PINS\GadgeteerBoard.cs" />
+    <Compile Include="GHI PINS\GadgeteerSocket.cs" />
+    <Compile Include="GHI PINS\Generic.cs" />
+    <Compile Include="Modules\AccelG248.cs" />
+    <Compile Include="Modules\Button.cs" />
+    <Compile Include="Modules\CharacterDisplay.cs" />
+    <Compile Include="Modules\CurrentACS712.cs" />
+    <Compile Include="Modules\DisplayNHVN.cs" />
+    <Compile Include="Modules\DisplayT35.cs" />
+    <Compile Include="Modules\GasSense.cs" />
+    <Compile Include="Modules\Gyro.cs" />
+    <Compile Include="Modules\Joystick.cs" />
+    <Compile Include="Modules\Led7C.cs" />
+    <Compile Include="Modules\LEDStrip.cs" />
+    <Compile Include="Modules\LightSense.cs" />
+    <Compile Include="Modules\RotaryH1.cs" />
+    <Compile Include="Modules\SerialCameraL1.cs" />
+    <Compile Include="Modules\TempHumidSI70.cs" />
+    <Compile Include="Modules\Tunes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Resources\NinaB.tinyfnt" />
-    <None Include="Resources\small.tinyfnt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\nature.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GHIElectronics.TinyCLR.Core, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -72,13 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GHIElectronics.TinyCLR.Gadgeteer\GHIElectronics.TinyCLR.Gadgeteer.csproj">
-      <Project>{8DBC7A2D-EBD8-490C-B315-8A6053524E92}</Project>
-      <Name>GHIElectronics.TinyCLR.Gadgeteer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\car.bmp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
