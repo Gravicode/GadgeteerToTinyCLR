@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyApp", "TinyApp\TinyApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHIElectronics.TinyCLR.Gadgeteer", "GHIElectronics.TinyCLR.Gadgeteer\GHIElectronics.TinyCLR.Gadgeteer.csproj", "{8DBC7A2D-EBD8-490C-B315-8A6053524E92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyCLR.LinesIn3D", "TinyCLR.LinesIn3D\TinyCLR.LinesIn3D.csproj", "{2FCEA97C-516D-45C1-8DF1-E232EE5AE16C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorVisualizerApp", "VectorVisualizerApp\VectorVisualizerApp.csproj", "{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GadgeteerTinyCLR", "GadgeteerTinyCLR", "{8FF65955-EF0C-413A-A896-673BC4C3B9E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lines3D", "Lines3D", "{9D143026-3675-43E4-8074-860DE94A1E53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,8 +31,24 @@ Global
 		{8DBC7A2D-EBD8-490C-B315-8A6053524E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DBC7A2D-EBD8-490C-B315-8A6053524E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DBC7A2D-EBD8-490C-B315-8A6053524E92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FCEA97C-516D-45C1-8DF1-E232EE5AE16C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FCEA97C-516D-45C1-8DF1-E232EE5AE16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FCEA97C-516D-45C1-8DF1-E232EE5AE16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FCEA97C-516D-45C1-8DF1-E232EE5AE16C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{519D1A1B-50C2-4AD9-A551-5AC3E1D02E8B} = {8FF65955-EF0C-413A-A896-673BC4C3B9E0}
+		{8DBC7A2D-EBD8-490C-B315-8A6053524E92} = {8FF65955-EF0C-413A-A896-673BC4C3B9E0}
+		{2FCEA97C-516D-45C1-8DF1-E232EE5AE16C} = {9D143026-3675-43E4-8074-860DE94A1E53}
+		{C902902E-E64F-4CC2-95EE-C2B11CC57EDD} = {9D143026-3675-43E4-8074-860DE94A1E53}
 	EndGlobalSection
 EndGlobal

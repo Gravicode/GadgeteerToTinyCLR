@@ -1,0 +1,9 @@
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\obj\Debug\TinyCLR.LinesIn3D.csprojResolveAssemblyReference.cache
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\bin\Debug\TinyCLR.LinesIn3D.dll
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\bin\Debug\TinyCLR.LinesIn3D.pdb
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\bin\Debug\GHIElectronics.TinyCLR.Core.dll
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\bin\Debug\GHIElectronics.TinyCLR.Devices.dll
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\bin\Debug\GHIElectronics.TinyCLR.Drawing.dll
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\bin\Debug\GHIElectronics.TinyCLR.Pins.dll
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\obj\Debug\TinyCLR.LinesIn3D.dll
+C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\TinyCLR.LinesIn3D\obj\Debug\TinyCLR.LinesIn3D.pdb
