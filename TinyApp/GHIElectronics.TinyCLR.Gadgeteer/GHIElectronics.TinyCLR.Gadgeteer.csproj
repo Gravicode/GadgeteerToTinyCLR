@@ -63,6 +63,7 @@
     <Compile Include="Modules\AccelG248.cs" />
     <Compile Include="Modules\Button.cs" />
     <Compile Include="Modules\CharacterDisplay.cs" />
+    <Compile Include="Modules\Compass.cs" />
     <Compile Include="Modules\CurrentACS712.cs" />
     <Compile Include="Modules\DisplayNHVN.cs" />
     <Compile Include="Modules\DisplayT35.cs" />
@@ -72,6 +73,10 @@
     <Compile Include="Modules\Led7C.cs" />
     <Compile Include="Modules\LEDStrip.cs" />
     <Compile Include="Modules\LightSense.cs" />
+    <Compile Include="Modules\Moisture.cs" />
+    <Compile Include="Modules\MotorDriverL298.cs" />
+    <Compile Include="Modules\PulseCount.cs" />
+    <Compile Include="Modules\PulseOximeter.cs" />
     <Compile Include="Modules\RotaryH1.cs" />
     <Compile Include="Modules\SerialCameraL1.cs" />
     <Compile Include="Modules\TempHumidSI70.cs" />

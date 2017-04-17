@@ -52,6 +52,7 @@ namespace TinyApp
             }
             */
             //TestLed7C();
+            /*
             var Lcd = new DisplayNHVN(FEZRaptor.I2cBus.I2c1,FEZRaptor.Socket16.Pin9,FEZRaptor.Socket13.Pin3,DisplayNHVN.DisplayTypes.Display7inch);
             var background = Resources.GetBitmap(Resources.BitmapResources.car);
             var font = Resources.GetFont(Resources.FontResources.NinaB);
@@ -61,6 +62,24 @@ namespace TinyApp
             Lcd.Screen.Flush();
             Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased; ;
             Thread.Sleep(Timeout.Infinite);
+            */
+            TestOximeter();
+            Thread.Sleep(Timeout.Infinite);
+        }
+        
+        static void TestOximeter()
+        {
+            PulseOximeter ox = new PulseOximeter(FEZRaptor.Socket10.SerialPortName);
+            ox.ProbeAttached += (PulseOximeter sender, EventArgs e) =>
+            {
+                Debug.WriteLine("probe attached.");
+            };
+            ox.ProbeDetached += (PulseOximeter sender, EventArgs e) =>
+            {
+                Debug.WriteLine("probe detached.");
+            };
+            ox.Heartbeat += (PulseOximeter sender, PulseOximeter.Reading e) => { Debug.WriteLine($"SPO: {e.SPO2} ,Pulse:{e.PulseRate}"); };
+
         }
 
         private static void Lcd_CapacitiveScreenReleased(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
@@ -77,6 +96,45 @@ namespace TinyApp
 
         /*
         #region Testing
+
+        static void TestPulseCount()
+        {
+            PulseCount cnt = new PulseCount(FEZRaptor.Socket17.Pin5, FEZRaptor.Socket17.Pin6, FEZRaptor.Socket17.Pin7,
+                FEZRaptor.Socket17.Pin8, FEZRaptor.Socket17.Pin9);
+            var count = cnt.GetCount();
+            while (true)
+            {
+                Debug.WriteLine($"count:{count}");
+                Thread.Sleep(200);
+            }
+        }
+        static void TestMotor()
+        {
+            MotorDriverL298 motor = new MotorDriverL298(FEZRaptor.Socket18.PwmPin.Controller0.Id, FEZRaptor.Socket18.PwmPin.Controller1.Id,
+               FEZRaptor.Socket18.PwmPin.Controller0.PC18, FEZRaptor.Socket18.PwmPin.Controller1.PC19, FEZRaptor.Socket18.Pin6, FEZRaptor.Socket18.Pin9);
+            motor.SetSpeed(MotorDriverL298.Motor.Motor1, -0.8);
+            motor.SetSpeed(MotorDriverL298.Motor.Motor2, -0.8);
+            Thread.Sleep(Timeout.Infinite);
+        }
+        
+        static void TestMoisture()
+        {
+            Moisture mois = new Moisture(FEZRaptor.Socket2.Pin6, FEZRaptor.Socket2.AnalogInput3);
+            while (true)
+            {
+                var nilai = mois.ReadMoisture();
+                Debug.WriteLine($"value : {nilai}");
+                Thread.Sleep(200);
+            }
+        }
+        static void TestCompass()
+        {
+            Compass com = new Compass(FEZRaptor.I2cBus.I2c1, FEZRaptor.Socket14.Pin3);
+            com.StartTakingMeasurements();
+            com.MeasurementComplete += (Compass sender, Compass.MeasurementCompleteEventArgs e) => { Debug.WriteLine($"Info : {e.ToString()}"); };
+            Thread.Sleep(Timeout.Infinite);
+        }
+
         static void TestACS712()
         {
             var curSensor = new CurrentACS712(FEZRaptor.Socket13.AnalogInput5);
