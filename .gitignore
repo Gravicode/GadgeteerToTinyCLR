@@ -1,0 +1,7 @@
+*.exe
+*.dll
+*.pdb
+
+/TinyApp/GHIElectronics.TinyCLR.Gadgeteer/bin/
+/TinyApp/GHIElectronics.TinyCLR.Gadgeteer/obj/
+/TinyApp/.vs/
