@@ -6,6 +6,9 @@ using TinyApp.Properties;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
+using GHIElectronics.TinyCLR.Storage.Streams;
+using System;
+using System.Text;
 
 namespace TinyApp
 {
@@ -63,10 +66,65 @@ namespace TinyApp
             Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased; ;
             Thread.Sleep(Timeout.Infinite);
             */
-            TestOximeter();
+            
+            //TestOximeter();
+
+            //Test max o (there is a bug when initialize the spi)
+            var mxO = new MaxO(FEZRaptor.Socket3.SpiModule, FEZRaptor.Socket3.Pin3, FEZRaptor.Socket3.Pin4, FEZRaptor.Socket3.Pin5);
+            mxO.Boards = 1;
+            mxO.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA });
+            //https://www.ghielectronics.com/docs/81/maxo-module
+            Thread.Sleep(Timeout.Infinite);
+            
+            
+        }
+        static void TestXbee()
+        {
+            var xbee = new XBeeAdapter();
+            xbee.Configure(FEZRaptor.Socket4.SerialPortName);
+            while (true)
+            {
+                var count = xbee.Port.BytesReceived;
+                var _Serialreadbuffer = new Buffer(count);
+                //_Serialreadbuffer.Capacity
+                uint read = xbee._inStream.Read(_Serialreadbuffer, count, InputStreamOptions.None);
+                if (read > 0)
+                {
+                    var buffer = _Serialreadbuffer.Data;
+                    string stng = new string(Encoding.UTF8.GetChars(buffer));
+                    Debug.WriteLine(stng);
+                    count = _Serialreadbuffer.Capacity - read;
+                }
+                else
+                if (read <= 0)
+                {
+                    throw new InvalidOperationException("Failed to read all of the bytes from the port.");
+                }
+
+                Thread.Sleep(100);
+            }
+        }
+        static void TestTB10()
+        {
+
+            var BO10 = new BreakoutTB10();
+            var Led = BO10.CreateDigitalOutput(FEZRaptor.Socket18.Pin3, true);
+            Led.Write(GHIElectronics.TinyCLR.Devices.Gpio.GpioPinValue.High);
             Thread.Sleep(Timeout.Infinite);
         }
-        
+        static void TestTouchC8()
+        {
+            var touch = new TouchC8(FEZRaptor.I2cBus.I2c1, FEZRaptor.Socket14.Pin3, FEZRaptor.Socket14.Pin6);
+            while (true)
+            {
+                Debug.WriteLine($"button down : {touch.IsButtonPressed(TouchC8.Button.Down)}");
+                Debug.WriteLine($"button middle : {touch.IsButtonPressed(TouchC8.Button.Middle)}");
+                Debug.WriteLine($"button up : {touch.IsButtonPressed(TouchC8.Button.Up)}");
+                Debug.WriteLine($"wheel pressed : {touch.IsWheelPressed()}");
+                Debug.WriteLine($"proximity detected : {touch.IsProximityDetected()}");
+                Thread.Sleep(200);
+            }
+        }
         static void TestOximeter()
         {
             PulseOximeter ox = new PulseOximeter(FEZRaptor.Socket10.SerialPortName);

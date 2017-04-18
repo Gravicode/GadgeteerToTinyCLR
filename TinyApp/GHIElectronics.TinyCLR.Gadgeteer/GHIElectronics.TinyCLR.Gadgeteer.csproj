@@ -61,6 +61,7 @@
     <Compile Include="GHI PINS\GadgeteerSocket.cs" />
     <Compile Include="GHI PINS\Generic.cs" />
     <Compile Include="Modules\AccelG248.cs" />
+    <Compile Include="Modules\BreakoutTB10.cs" />
     <Compile Include="Modules\Button.cs" />
     <Compile Include="Modules\CharacterDisplay.cs" />
     <Compile Include="Modules\Compass.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Modules\Led7C.cs" />
     <Compile Include="Modules\LEDStrip.cs" />
     <Compile Include="Modules\LightSense.cs" />
+    <Compile Include="Modules\MaxO.cs" />
     <Compile Include="Modules\Moisture.cs" />
     <Compile Include="Modules\MotorDriverL298.cs" />
     <Compile Include="Modules\PulseCount.cs" />
@@ -80,8 +82,11 @@
     <Compile Include="Modules\RotaryH1.cs" />
     <Compile Include="Modules\SerialCameraL1.cs" />
     <Compile Include="Modules\TempHumidSI70.cs" />
+    <Compile Include="Modules\TouchC8.cs" />
     <Compile Include="Modules\Tunes.cs" />
+    <Compile Include="Modules\XBeeAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Socket\Pin.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GHIElectronics.TinyCLR.Core, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
