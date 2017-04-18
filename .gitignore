@@ -5,3 +5,6 @@
 /TinyApp/GHIElectronics.TinyCLR.Gadgeteer/bin/
 /TinyApp/GHIElectronics.TinyCLR.Gadgeteer/obj/
 /TinyApp/.vs/
+TinyApp/TinyApp/obj/
+TinyApp/TinyCLR.LinesIn3D/obj/
+TinyApp/VectorVisualizerApp/obj/
