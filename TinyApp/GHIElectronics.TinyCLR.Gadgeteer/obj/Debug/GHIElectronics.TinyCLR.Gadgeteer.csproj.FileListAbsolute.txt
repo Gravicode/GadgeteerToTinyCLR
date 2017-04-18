@@ -1,9 +1,0 @@
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\bin\Debug\GHIElectronics.TinyCLR.Gadgeteer.dll
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\bin\Debug\GHIElectronics.TinyCLR.Gadgeteer.pdb
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\bin\Debug\GHIElectronics.TinyCLR.Core.dll
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\bin\Debug\GHIElectronics.TinyCLR.Devices.dll
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\bin\Debug\GHIElectronics.TinyCLR.Drawing.dll
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\bin\Debug\GHIElectronics.TinyCLR.Pins.dll
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\obj\Debug\GHIElectronics.TinyCLR.Gadgeteer.dll
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\obj\Debug\GHIElectronics.TinyCLR.Gadgeteer.pdb
-C:\Users\mifma\Documents\GitHub\GadgeteerToTinyCLR\TinyApp\GHIElectronics.TinyCLR.Gadgeteer\obj\Debug\GHIElectronics.TinyCLR.Gadgeteer.csprojResolveAssemblyReference.cache
