@@ -65,7 +65,6 @@ namespace TinyApp
             Lcd.Screen.Flush();
             Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased; ;
             Thread.Sleep(Timeout.Infinite);
-            */
 
             //TestOximeter();
 
@@ -76,7 +75,8 @@ namespace TinyApp
             mxO.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA });
             //https://www.ghielectronics.com/docs/81/maxo-module
             Thread.Sleep(Timeout.Infinite);
-            
+            */
+            TestDisplayN18();
         }
 
         static void TestVideoOut()
@@ -91,6 +91,20 @@ namespace TinyApp
             Lcd.Screen.Flush();
 
             Thread.Sleep(Timeout.Infinite);
+        }
+
+        static void TestDisplayN18()
+        {
+            var displayN18=new DisplayN18(FEZSpiderII.Socket6.Pin3,FEZSpiderII.Socket6.Pin4,FEZSpiderII.Socket6.Pin5);
+            displayN18.BacklightEnabled = true;
+            Thread.Sleep(1000);
+            displayN18.BacklightEnabled = false;
+            Thread.Sleep(1000);
+            displayN18.BacklightEnabled = true;
+            Thread.Sleep(1000);
+            displayN18.BacklightEnabled = false;
+            Thread.Sleep(1000);
+
         }
 
         static void TestRelay()
