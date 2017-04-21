@@ -8,3 +8,8 @@
 TinyApp/TinyApp/obj/
 TinyApp/TinyCLR.LinesIn3D/obj/
 TinyApp/VectorVisualizerApp/obj/
+TinyApp/TinyApp/bin/Debug/pe/GHIElectronics.TinyCLR.Gadgeteer.pe
+TinyApp/TinyApp/bin/Debug/pe/TinyApp.pdbx
+TinyApp/TinyApp/bin/Debug/pe/TinyApp.pe
+TinyApp/TinyApp/bin/Debug/pe/GHIElectronics.TinyCLR.Gadgeteer.pdbx
+*.user
