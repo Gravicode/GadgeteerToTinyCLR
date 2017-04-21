@@ -66,17 +66,44 @@ namespace TinyApp
             Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased; ;
             Thread.Sleep(Timeout.Infinite);
             */
-            
+
             //TestOximeter();
 
             //Test max o (there is a bug when initialize the spi)
-            var mxO = new MaxO(FEZRaptor.Socket3.SpiModule, FEZRaptor.Socket3.Pin3, FEZRaptor.Socket3.Pin4, FEZRaptor.Socket3.Pin5);
+            
+            var mxO = new MaxO(FEZRaptor.SpiBus.Spi2, FEZRaptor.Socket3.Pin3, FEZRaptor.Socket3.Pin4, FEZRaptor.Socket3.Pin5);
             mxO.Boards = 1;
             mxO.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA });
             //https://www.ghielectronics.com/docs/81/maxo-module
             Thread.Sleep(Timeout.Infinite);
             
-            
+        }
+
+        static void TestVideoOut()
+        {
+            var Lcd = new VideoOut(FEZRaptor.I2cBus.I2c1);
+            Lcd.SetDisplayConfiguration(VideoOut.Resolution.Vga800x600);
+            var background = Resources.GetBitmap(Resources.BitmapResources.car);
+            var font = Resources.GetFont(Resources.FontResources.NinaB);
+            Lcd.Screen.DrawImage(background, 0, 0);
+
+            Lcd.Screen.DrawString("Hello, world", font, new SolidBrush(Color.White), 10, 400);
+            Lcd.Screen.Flush();
+
+            Thread.Sleep(Timeout.Infinite);
+        }
+
+        static void TestRelay()
+        {
+            var relay = new RelayX1(FEZRaptor.Socket18.Pin5);
+            while (true)
+            {
+                relay.TurnOn();
+                Thread.Sleep(2000);
+                relay.TurnOff();
+                Thread.Sleep(2000);
+
+            }
         }
         static void TestXbee()
         {
