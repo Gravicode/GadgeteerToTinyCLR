@@ -67,6 +67,7 @@
     <Compile Include="Modules\CharacterDisplay.cs" />
     <Compile Include="Modules\Compass.cs" />
     <Compile Include="Modules\CurrentACS712.cs" />
+    <Compile Include="Modules\DisplayN18.cs" />
     <Compile Include="Modules\DisplayNHVN.cs" />
     <Compile Include="Modules\DisplayT35.cs" />
     <Compile Include="Modules\GasSense.cs" />

@@ -68,7 +68,7 @@ namespace Gadgeteer.Modules
             {
                 this._wpfMode = wpfMode;
             }
-
+            
             protected bool OnDisplayConnected(string displayModel, int width, int height, DisplayOrientation orientation, TimingRequirements timing)
             {
                 bool flag = true;
@@ -105,7 +105,7 @@ namespace Gadgeteer.Modules
                 this._orientation = orientation;
                 return flag;
             }
-
+        
             protected void OnDisplayDisconnected()
             {
                 if (this._wpfMode == WpfMode.PassThrough)
@@ -304,7 +304,7 @@ namespace Gadgeteer.Modules
                     return this._wpfWindow;
                 }
             }
-
+            */
             public enum DisplayOrientation
             {
                 Clockwise90Degrees = 90,
@@ -313,6 +313,7 @@ namespace Gadgeteer.Modules
                 UpsideDown = 180
             }
 
+            /*
             public class SimpleGraphicsInterface : IDisposable
             {
                 private bool _autoRedraw;

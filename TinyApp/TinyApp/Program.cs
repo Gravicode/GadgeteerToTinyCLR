@@ -65,7 +65,6 @@ namespace TinyApp
             Lcd.Screen.Flush();
             Lcd.CapacitiveScreenReleased += Lcd_CapacitiveScreenReleased; ;
             Thread.Sleep(Timeout.Infinite);
-            */
 
             //TestOximeter();
 
@@ -76,7 +75,8 @@ namespace TinyApp
             mxO.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA });
             //https://www.ghielectronics.com/docs/81/maxo-module
             Thread.Sleep(Timeout.Infinite);
-            
+            */
+            TestDisplayN18();
         }
 
         static void TestVideoOut()
@@ -93,6 +93,23 @@ namespace TinyApp
             Thread.Sleep(Timeout.Infinite);
         }
 
+        static void TestDisplayN18()
+        {
+            var displayN18 = new DisplayN18(FEZSpiderII.Socket6.SpiModule, FEZSpiderII.Socket6.Pin3,
+                FEZSpiderII.Socket6.Pin4, FEZSpiderII.Socket6.Pin5, FEZSpiderII.Socket6.Pin6) {BacklightEnabled = true};
+
+            displayN18.DrawPixel(10,10,Color.Red);
+            Thread.Sleep(1000);
+            displayN18.DrawFillRect(0,0,100,100,Color.Green);
+            Thread.Sleep(1000);
+            Bitmap bmp = Resources.GetBitmap(Resources.BitmapResources.logo);
+            displayN18.DrawBitmap(bmp, 0, 0);
+            Thread.Sleep(1000);
+            Font font = Resources.GetFont(Resources.FontResources.NinaB);
+            displayN18.DrawString("HMMMMMMMH",font,10,10,Color.Red);
+            Thread.Sleep(1000);
+        }
+
         static void TestRelay()
         {
             var relay = new RelayX1(FEZRaptor.Socket18.Pin5);
@@ -105,6 +122,7 @@ namespace TinyApp
 
             }
         }
+
         static void TestXbee()
         {
             var xbee = new XBeeAdapter();
@@ -131,6 +149,7 @@ namespace TinyApp
                 Thread.Sleep(100);
             }
         }
+
         static void TestTB10()
         {
 
@@ -139,6 +158,7 @@ namespace TinyApp
             Led.Write(GHIElectronics.TinyCLR.Devices.Gpio.GpioPinValue.High);
             Thread.Sleep(Timeout.Infinite);
         }
+
         static void TestTouchC8()
         {
             var touch = new TouchC8(FEZRaptor.I2cBus.I2c1, FEZRaptor.Socket14.Pin3, FEZRaptor.Socket14.Pin6);
@@ -152,6 +172,7 @@ namespace TinyApp
                 Thread.Sleep(200);
             }
         }
+
         static void TestOximeter()
         {
             PulseOximeter ox = new PulseOximeter(FEZRaptor.Socket10.SerialPortName);
@@ -164,13 +185,11 @@ namespace TinyApp
                 Debug.WriteLine("probe detached.");
             };
             ox.Heartbeat += (PulseOximeter sender, PulseOximeter.Reading e) => { Debug.WriteLine($"SPO: {e.SPO2} ,Pulse:{e.PulseRate}"); };
-
         }
 
         private static void Lcd_CapacitiveScreenReleased(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
         {
             Debug.WriteLine("you touch the lcd");
-
         }
 
         private static void Lcd_CapacitiveScreenPressed(DisplayNHVN sender, DisplayNHVN.TouchEventArgs e)
