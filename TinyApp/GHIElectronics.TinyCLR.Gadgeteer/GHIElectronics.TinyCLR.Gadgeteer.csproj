@@ -65,6 +65,7 @@
     <Compile Include="Modules\Button.cs" />
     <Compile Include="Modules\CellularRadio.cs" />
     <Compile Include="Modules\CharacterDisplay.cs" />
+    <Compile Include="Modules\DisplayT43.cs" />
     <Compile Include="Modules\Compass.cs" />
     <Compile Include="Modules\CurrentACS712.cs" />
     <Compile Include="Modules\DisplayN18.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Modules\Gyro.cs" />
     <Compile Include="Modules\Joystick.cs" />
     <Compile Include="Modules\Led7C.cs" />
-    <Compile Include="Modules\LEDStrip.cs" />
+    <Compile Include="Modules\LedStrip.cs" />
     <Compile Include="Modules\LightSense.cs" />
     <Compile Include="Modules\MaxO.cs" />
     <Compile Include="Modules\Moisture.cs" />
