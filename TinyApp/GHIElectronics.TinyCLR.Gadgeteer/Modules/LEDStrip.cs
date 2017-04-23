@@ -5,7 +5,7 @@ using GTM = Gadgeteer.Modules;
 
 namespace Gadgeteer.Modules.GHIElectronics {
 	/// <summary>An LEDStrip module for Microsoft .NET Gadgeteer</summary>
-	public class LEDStrip : GTM.Module {
+	public class LedStrip : GTM.Module {
 		private GpioPin[] leds;
 
 		/// <summary>The number of LEDs on the module.</summary>
@@ -34,7 +34,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
 		/// <summary>Constructor</summary>
 		/// <param name="DigitalPin3">Pin 3 in its socket.</param>
-		public LEDStrip(int[] DigitalPin3To9) {
+		public LedStrip(int[] DigitalPin3To9) {
             //Socket socket = Socket.GetSocket(socketNumber, true, this, null);
 
             //socket.EnsureTypeIsSupported('Y', this);
