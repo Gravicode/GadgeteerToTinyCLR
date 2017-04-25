@@ -1,0 +1,14 @@
+*.exe
+*.dll
+*.pdb
+*.user
+
+TinyApp/.vs/
+TinyApp/GHIElectronics.TinyCLR.Gadgeteer/bin/
+TinyApp/GHIElectronics.TinyCLR.Gadgeteer/obj/
+TinyApp/TinyApp/bin/
+TinyApp/TinyApp/obj/
+TinyApp/TinyCLR.LinesIn3D/bin/
+TinyApp/TinyCLR.LinesIn3D/obj/
+TinyApp/VectorVisualizerApp/bin/
+TinyApp/VectorVisualizerApp/obj/
