@@ -35,9 +35,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
             return AnalogPins[PinNumber - 1];
         }
         /// <summary>Creates a digital input on the given pin.</summary>
-        /// <param name="pin">The pin to create the interface on.</param>
-        /// <param name="glitchFilterMode">The glitch filter mode for the interface.</param>
-        /// <param name="resistorMode">The resistor mode for the interface.</param>
+        /// <param name="DigitalPin">The pin to create the interface on.</param>
         /// <returns>The new interface.</returns>
         public GpioPin CreateDigitalInput(int DigitalPin) {
             var controller = GpioController.GetDefault();
@@ -48,7 +46,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
         }
 
         /// <summary>Creates a digital output on the given pin.</summary>
-        /// <param name="pin">The pin to create the interface on.</param>
+        /// <param name="DigitalPin">The pin to create the interface on.</param>
         /// <param name="initialState">The initial state for the interface.</param>
         /// <returns>The new interface.</returns>
         public GpioPin CreateDigitalOutput(int DigitalPin, bool initialState) {
@@ -61,10 +59,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
         
 
 		/// <summary>Creates an interrupt input on the given pin.</summary>
-		/// <param name="pin">The pin to create the interface on.</param>
-		/// <param name="glitchFilterMode">The glitch filter mode for the interface.</param>
-		/// <param name="resistorMode">The resistor mode for the interface.</param>
-		/// <param name="interruptMode">The interrupt mode for the interface.</param>
+		/// <param name="DigitalPin">The pin to create the interface on.</param>
+		/// <param name="isPullUp">Input pull up ?.</param>
 		/// <returns>The new interface.</returns>
 		public GpioPin CreateInterruptInput(int DigitalPin, bool IsPullUp) {
             var controller = GpioController.GetDefault();
@@ -75,7 +71,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
         }
 
 		/// <summary>Creates an analog input on the given pin.</summary>
-		/// <param name="pin">The pin to create the interface on.</param>
+		/// <param name="AnalogPin">The pin to create the interface on.</param>
 		/// <returns>The new interface.</returns>
 		public AdcChannel CreateAnalogInput(int AnalogPin) {
             var AnalogController = AdcController.GetDefault();
@@ -85,7 +81,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
         }
 
 		/// <summary>Creates an analog output on the given pin.</summary>
-		/// <param name="pin">The pin to create the interface on.</param>
+		/// <param name="AnalogPin">The pin to create the interface on.</param>
 		/// <returns>The new interface.</returns>
 		public DacChannel CreateAnalogOutput(int AnalogPin) {
             var AnalogController = DacController.GetDefault();
@@ -93,10 +89,11 @@ namespace Gadgeteer.Modules.GHIElectronics {
             return ThisAnalogPin;
 		}
 
-		/// <summary>Creates a pwm output on the given pin.</summary>
-		/// <param name="pin">The pin to create the interface on.</param>
-		/// <returns>The new interface.</returns>
-		public PwmPin CreatePwmOutput(string PwmId, int PWMPin) {
+        /// <summary>Creates a pwm output on the given pin.</summary>
+        /// <param name="PwmId">The ID PWM to create the interface on.</param>
+        /// <param name="PWMPin">The pwm pin number.</param>
+        /// <returns>The new interface.</returns>
+        public PwmPin CreatePwmOutput(string PwmId, int PWMPin) {
             //socket.EnsureTypeIsSupported('P', this);
             var PwmController1 = PwmController.FromId(PwmId);
             var pwm = PwmController1.OpenPin(PWMPin);

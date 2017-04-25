@@ -98,6 +98,7 @@ namespace Gadgeteer.Modules.GHIElectronics
 
         /// <summary>Constructs a new instance.</summary>
         /// <param name="DigitalPin3">The mainboard pin that has digital pin.</param>
+        /// <param name="DigitalPin4">The mainboard pin that has digital pin.</param>
         public Button(int DigitalPin3, int DigitalPin4)
         {
             //Socket socket = Socket.GetSocket(socketNumber, true, this, null);

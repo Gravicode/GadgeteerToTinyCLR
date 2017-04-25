@@ -12,7 +12,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		private byte[] buffer6;
         const int I2C_ADDRESS = 0x1C;
         /// <summary>Constructs a new instance.</summary>
-        /// <param name="socketNumber">The socket that this module is plugged in to.</param>
+        /// <param name="I2CBus">I2CBus name.</param>
         public AccelG248(string I2CBus) {
             //Socket socket = Socket.GetSocket(socketNumber, true, this, null);
             //socket.EnsureTypeIsSupported('I', this);

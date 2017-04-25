@@ -33,7 +33,7 @@ namespace TinyApp
             // Oximeter
             // TestOximeter();
 
-             // Test max o (there is a bug when initialize the spi)       
+             // Test max o 
              // TestMaxO();
 
             // Display N18
@@ -50,12 +50,23 @@ namespace TinyApp
         /// </summary>
         private static void TestMaxO()
         {
-            var mxO = new MaxO(FEZRaptor.SpiBus.Spi2, FEZRaptor.Socket3.Pin3, FEZRaptor.Socket3.Pin4,
-                FEZRaptor.Socket3.Pin5) {Boards = 1};
+
+            var mxO = new MaxO(FEZRaptor.Socket11.SpiModule, FEZRaptor.Socket11.Pin3, FEZRaptor.Socket11.Pin4, FEZRaptor.Socket11.Pin5);
+            mxO.Boards = 1;
             mxO.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA });
             //https://www.ghielectronics.com/docs/81/maxo-module
+            bool state = false;
+            while (true)
+            {
+                state = !state;
+                for (int i = 0; i < 10; i++)
+                {
 
-            Thread.Sleep(Timeout.Infinite);
+                    mxO.SetPin(1, i, state);
+                }
+                Debug.WriteLine($"set pin state : {state}");
+                Thread.Sleep(500);
+            }
         }
 
         /// <summary>
