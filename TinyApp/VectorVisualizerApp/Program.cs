@@ -181,7 +181,7 @@ namespace VectorVisualizerApp
             this.Visualizer.Lines.ReDraw();
         }
 
-        private void Lines_ReDrawn(object sender, EventArgs e)
+        private void Lines_ReDrawn(object sender, TinyCLR.LinesIn3D.EventArgs e)
         {
             if (!this._isOverSliderX) this.SliderX = ((this.Visualizer.Lines.RotationDegreesX + 180) / 360D) * 10;
             if (!this._isOverSliderY) this.SliderY = ((this.Visualizer.Lines.RotationDegreesY + 180) / 360D) * 10;
