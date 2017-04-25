@@ -62,7 +62,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
             settings.ClockFrequency = 1000000; //1000Khz                             
             settings.Mode = SpiMode.Mode1; //clock polarity = false, clock phase = true                                  
             settings.SharingMode = SpiSharingMode.Shared;
-            
+            settings.DataBitLength = 8;
            
             string spiAqs = SpiDevice.GetDeviceSelector(SPIControllerName);
             var devicesInfo = DeviceInformation.FindAll(spiAqs);

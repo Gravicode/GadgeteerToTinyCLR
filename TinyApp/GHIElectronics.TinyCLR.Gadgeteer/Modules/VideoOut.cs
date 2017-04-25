@@ -54,7 +54,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
             // Device I2C1 Slave address
             I2cConnectionSettings Setting = new I2cConnectionSettings(I2C_ADDRESS);
-            
+            Setting.SharingMode = I2cSharingMode.Shared;
             Setting.BusSpeed = I2cBusSpeed.StandardMode; // 100kHz
             i2c = I2cDevice.FromId(Devices[0].Id, Setting);
             this.currentHeight = 320;
@@ -149,6 +149,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
                     this.Write320x240RcaPalRegisters();
                     break;
             }
+            
             var displayController = DisplayController.GetDefault(); //Currently returns the hardware LCD controller by default
 
 
@@ -167,9 +168,11 @@ namespace Gadgeteer.Modules.GHIElectronics {
                 VerticalFrontPorch = 10,
                 VerticalBackPorch = 10,
                 VerticalSyncPulseWidth = 10,
-                VerticalSyncPolarity = true,//
+                VerticalSyncPolarity = true
+                
             });
             Screen = Graphics.FromHdc(displayController.Hdc); //Calling flush on the object returned will flush to the display represented by Hdc. Only one active display is supported at this time.
+            
                                                               /*
                                                               var config = new DisplayModule.TimingRequirements() {
                                                                   PixelDataIsActiveHigh = true, //not the proper property, but we needed it for PriorityEnable
@@ -194,6 +197,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
             var ud = ReadRegister(0x00);
             if (ud != 0x55 && ud != 0x54)
                 this.ErrorPrint("Setting the display configuration failed.");
+
         }
 
         /// <summary>Renders display data on the display device.</summary>

@@ -54,7 +54,7 @@ namespace TinyApp
                 Thread.Sleep(200);
             }
             */
-            //TestLed7C();
+
             /*
             var Lcd = new DisplayNHVN(FEZRaptor.I2cBus.I2c1,FEZRaptor.Socket16.Pin9,FEZRaptor.Socket13.Pin3,DisplayNHVN.DisplayTypes.Display7inch);
             var background = Resources.GetBitmap(Resources.BitmapResources.car);
@@ -68,22 +68,37 @@ namespace TinyApp
             */
 
             //TestOximeter();
-
-            //Test max o (there is a bug when initialize the spi)
+            TestVideoOut();
             
-            var mxO = new MaxO(FEZRaptor.SpiBus.Spi2, FEZRaptor.Socket3.Pin3, FEZRaptor.Socket3.Pin4, FEZRaptor.Socket3.Pin5);
+
+        }
+        static void TestMaxO()
+        {
+            //Test max o (there is a bug when initialize the spi)
+
+            var mxO = new MaxO(FEZRaptor.Socket11.SpiModule, FEZRaptor.Socket11.Pin3, FEZRaptor.Socket11.Pin4, FEZRaptor.Socket11.Pin5);
             mxO.Boards = 1;
             mxO.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA });
             //https://www.ghielectronics.com/docs/81/maxo-module
-            Thread.Sleep(Timeout.Infinite);
-            
+            bool state = false;
+            while (true)
+            {
+                state = !state;
+                for (int i = 0; i < 10; i++)
+                {
+
+                    mxO.SetPin(1, i, state);
+                }
+                Debug.WriteLine($"set pin state : {state}");
+                Thread.Sleep(500);
+            }
         }
 
         static void TestVideoOut()
         {
             var Lcd = new VideoOut(FEZRaptor.I2cBus.I2c1);
             Lcd.SetDisplayConfiguration(VideoOut.Resolution.Vga800x600);
-            var background = Resources.GetBitmap(Resources.BitmapResources.car);
+            var background = Resources.GetBitmap(Resources.BitmapResources.nature);
             var font = Resources.GetFont(Resources.FontResources.NinaB);
             Lcd.Screen.DrawImage(background, 0, 0);
 
