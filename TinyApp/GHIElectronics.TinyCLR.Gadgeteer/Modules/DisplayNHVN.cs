@@ -232,15 +232,19 @@ namespace Gadgeteer.Modules.GHIElectronics
             this.touchInterrupt = controller.OpenPin(portId);
             this.touchInterrupt.SetDriveMode(GpioPinDriveMode.Input);
             //touchInterrupt = new InterruptPort(portId, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeBoth);
-            touchInterrupt.ValueChanged += (object sender, GpioPinValueChangedEventArgs e) =>
-            {
-                this.OnTouchEvent();
-            };
+            touchInterrupt.ValueChanged += TouchInterrupt_ValueChanged;
+         
+            //+= (object sender, GpioPinValueChangedEventArgs e) =>
+
             //touchInterrupt.OnInterrupt += (a, b, c) => this.OnTouchEvent();
 
 
         }
 
+        private void TouchInterrupt_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
+        {
+            this.OnTouchEvent();
+        }
 
         private void OnTouchEvent()
         {

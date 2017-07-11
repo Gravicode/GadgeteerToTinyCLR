@@ -19,6 +19,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		private SerialDevice port;
         private IOutputStream _outStream;
         private IInputStream _inStream;
+        private DataReader SerialReader;
+        private DataWriter SerialWriter;
         private bool newImageReady;
 		private bool updateStreaming;
 		private bool paused;
@@ -42,8 +44,11 @@ namespace Gadgeteer.Modules.GHIElectronics {
 			}
 
 			set {
-                _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x19, (byte)value });
-                this._outStream.Write(_Serialmsgbuffer);
+                var data = new Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x19, (byte)value };
+                SerialWriter.WriteBytes(data);
+                SerialWriter.Store();
+                //_Serialmsgbnew Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x19, (byte)value }uffer = new Buffer(new Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x19, (byte)value });
+                //this._outStream.Write(_Serialmsgbuffer);
                 //this.port.Write(0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x19, (byte)value);
 
 				Thread.Sleep(SerialCameraL1.CMD_DELAY_TIME);
@@ -84,6 +89,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
             //socket, 115200, GTI.SerialParity.None, GTI.SerialStopBits.One, 8, GTI.HardwareFlowControl.NotRequired, this
             _outStream = port.OutputStream;
             _inStream = port.InputStream;
+            SerialReader = new DataReader(port.InputStream);
+            SerialWriter = new DataWriter(port.OutputStream);
             //Socket socket = Socket.GetSocket(socketNumber, true, this, null);
             //socket.EnsureTypeIsSupported('U', this);
 
@@ -104,8 +111,11 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		/// <returns>Whether it was successful or not.</returns>
 		public bool SetRatio(byte ratio) {
 			this.DiscardBuffers();
-            _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x1A, ratio });
-            this._outStream.Write(_Serialmsgbuffer);
+            var bytedata = new Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x1A, ratio };
+            SerialWriter.WriteBytes(bytedata);
+            SerialWriter.Store();
+            //_Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x1A, ratio });
+            //this._outStream.Write(_Serialmsgbuffer);
             //this.port.Write(0x56, 0x00, 0x31, 0x05, 0x04, 0x01, 0x00, 0x1A, ratio);
 
 			Thread.Sleep(SerialCameraL1.CMD_DELAY_TIME);
@@ -223,10 +233,13 @@ namespace Gadgeteer.Modules.GHIElectronics {
                 var mem = new MemoryStream(this.imageData);
 				var image = new Bitmap(mem);//this.imageData, Bitmap.BitmapImageType.Jpeg
                 //bitmap.DrawImage(x, y, image, 0, 0, width, height);
-
+                bitmap = image;
 				this.ResumeStreaming();
 			}
-		}
+
+
+       
+        }
 
 		private void DiscardBuffers() {
             this._outStream.Flush();
@@ -235,53 +248,58 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		}
 
 		private byte[] ReadBytes() {
-            uint available = this.port.BytesReceived;//BytesToRead;
+                var i = SerialReader.Load(1000000);
+                if (i > 0)
+                {
+                    byte[] buffer = new byte[i];
 
-			if (available <= 0)
-				return null;
-
-			byte[] buffer = new byte[available];
-			this.ReadBytes(buffer, 0, (uint)buffer.Length);
-			return buffer;
+                    SerialReader.ReadBytes(buffer);
+                    return buffer;
+                }
+                else
+                    return null;
+            
 		}
 
 		private void ReadBytes(byte[] buffer, int offset, uint count) {
-			int attempts = 0;
-            
-			do {
-                var _Serialreadbuffer = new Buffer(count);
-                //_Serialreadbuffer.Capacity
-                uint read = _inStream.Read(_Serialreadbuffer, count, InputStreamOptions.None);
-                if (read>0)
+            int attempts = 0;
+
+            do
+            {
+                var read = SerialReader.Load(count);
+                if (read > 0)
                 {
-                    buffer = _Serialreadbuffer.Data;
-                    //string stng = b.GetValue(0).ToString();
-                    count = _Serialreadbuffer.Capacity - read;
+                    var temp = new byte[read];
+                    //buffer = new byte[read];
+                    SerialReader.ReadBytes(temp);
+                    Array.Copy(temp, 0, buffer, offset,(int) read);
+                    //int read = this.port.Read(buffer, offset, count);
+
+                    offset += (int)read;
+                    count -= read;
+                }else if (read == 0)
+                {
+                    this.SerialReader.DetachBuffer();
+
+                    if (attempts++ > 1)
+                        throw new InvalidOperationException("Failed to read all of the bytes from the port.");
+
+                    continue;
                 }
-                else
-                //int read = this.port.Read(buffer, offset, count);
-                //offset += read;
-				
 
-				if (read <= 0) {
-					//this.port.DiscardInBuffer();
-                   
-					if (attempts++ > 1)
-						throw new InvalidOperationException("Failed to read all of the bytes from the port.");
-
-					continue;
-				}
-
-				Thread.Sleep(1);
-			} while (count > 0);
-		}
+                Thread.Sleep(10);
+            } while (count > 0);
+        }
 
 		private bool ResetCamera() {
-            _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x26, 0x00 });
-            this._outStream.Write(_Serialmsgbuffer);
+            var data = new Byte[] { 0x56, 0x00, 0x26, 0x00 };
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+            //_Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x26, 0x00 });
+            //this._outStream.Write(_Serialmsgbuffer);
             //this.port.Write(0x56, 0x00, 0x26, 0x00);
 
-			Thread.Sleep(SerialCameraL1.RESET_DELAY_TIME);
+            Thread.Sleep(SerialCameraL1.RESET_DELAY_TIME);
 
 			var received = this.ReadBytes();
 
@@ -290,11 +308,15 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
 		private bool StopFrameBufferControl() {
 			this.DiscardBuffers();
-            _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x36, 0x01, 0x00 });
-            this._outStream.Write(_Serialmsgbuffer);
+            var data = new Byte[] { 0x56, 0x00, 0x36, 0x01, 0x00 };
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+
+            //_Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x36, 0x01, 0x00 });
+            //this._outStream.Write(_Serialmsgbuffer);
             //this.port.Write(0x56, 0x00, 0x36, 0x01, 0x00);
 
-			Thread.Sleep(SerialCameraL1.CMD_DELAY_TIME);
+            Thread.Sleep(SerialCameraL1.CMD_DELAY_TIME);
 
 			byte[] received = this.ReadBytes();
 
@@ -303,8 +325,11 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
 		private void ResumeToNextFrame() {
 			this.DiscardBuffers();
-            _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x36, 0x01, 0x03 });
-            this._outStream.Write(_Serialmsgbuffer);
+            var data = new Byte[] { 0x56, 0x00, 0x36, 0x01, 0x03 };
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+            //_Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x36, 0x01, 0x03 });
+            //this._outStream.Write(_Serialmsgbuffer);
             //this.port.Write(0x56, 0x00, 0x36, 0x01, 0x03);
 
 			this.ReadBytes(new byte[5], 0, 5);
@@ -312,8 +337,12 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
 		private int GetFrameBufferLength() {
 			this.DiscardBuffers();
-            _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x34, 0x01, 0x00 });
-            this._outStream.Write(_Serialmsgbuffer);//_outStream.Write();
+            var data = new Byte[] { 0x56, 0x00, 0x34, 0x01, 0x00 };
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+            
+            //_Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x34, 0x01, 0x00 });
+            //this._outStream.Write(_Serialmsgbuffer);//_outStream.Write();
 
             Thread.Sleep(SerialCameraL1.CMD_DELAY_TIME);
 
@@ -328,11 +357,14 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
 		private bool ReadFrameBuffer() {
 			this.DiscardBuffers();
-            _Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x32, 0x0C, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, (byte)(this.dataSize >> 24), (byte)(this.dataSize >> 16), (byte)(this.dataSize >> 8), (byte)(this.dataSize), 0x10, 0x00 });
-            this._outStream.Write(_Serialmsgbuffer);
+            var data = new Byte[] { 0x56, 0x00, 0x32, 0x0C, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, (byte)(this.dataSize >> 24), (byte)(this.dataSize >> 16), (byte)(this.dataSize >> 8), (byte)(this.dataSize), 0x10, 0x00 };
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+            //_Serialmsgbuffer = new Buffer(new Byte[] { 0x56, 0x00, 0x32, 0x0C, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, (byte)(this.dataSize >> 24), (byte)(this.dataSize >> 16), (byte)(this.dataSize >> 8), (byte)(this.dataSize), 0x10, 0x00 });
+            //this._outStream.Write(_Serialmsgbuffer);
             //this.port.Write();
 
-			Thread.Sleep(10);
+            Thread.Sleep(10);
 
 			try {
 				byte[] header = new byte[5];

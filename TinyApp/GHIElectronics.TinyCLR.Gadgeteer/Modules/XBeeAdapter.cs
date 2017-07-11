@@ -11,7 +11,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		private SerialDevice serialPort;
         public IOutputStream _outStream;
         public IInputStream _inStream;
-
+        public DataReader SerialReader;
+        public DataWriter SerialWriter;
         private string ComId { set; get; }
 
 		//private Socket socket;
@@ -27,7 +28,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
 		/// <summary>Constructs a new instance.</summary>
 		/// <param name="socketNumber">The socket that this module is plugged in to.</param>
-		public XBeeAdapter() {
+		public XBeeAdapter(string ComId) {
+            this.ComId = ComId;
 			//this.socket = Socket.GetSocket(socketNumber, true, this, null);
 			//this.socket.EnsureTypeIsSupported('U', this);
 			this.serialPort = null;
@@ -45,6 +47,9 @@ namespace Gadgeteer.Modules.GHIElectronics {
             serialPort.Handshake = SerialHandshake.None;
             _outStream = serialPort.OutputStream;
             _inStream = serialPort.InputStream;
+            SerialWriter = new DataWriter(_outStream);
+            SerialReader = new DataReader(_inStream);
+
             //this.serialPort.ReadTimeout = new TimeSpan(0, 0, 0, 0, 500);
             //this.serialPort.WriteTimeout = new TimeSpan(0, 0, 0, 0, 500);
         }
@@ -66,6 +71,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
             serialPort.Handshake = flowControl;
             _outStream = serialPort.OutputStream;
             _inStream = serialPort.InputStream;
+            SerialWriter = new DataWriter(_outStream);
+            SerialReader = new DataReader(_inStream);
         }
 	}
 }

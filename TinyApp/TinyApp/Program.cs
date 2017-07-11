@@ -19,10 +19,10 @@ namespace TinyApp
         public static void Main()
         {
             // DisplayT35  
-            // var Lcd = TestDisplayT35();
+            var Lcd = TestDisplayT35();
 
             // camera serial
-            // TestSerialCameraL1(Lcd);
+            TestSerialCameraL1(Lcd);
 
             // Led 7 colors
             // TestLed7C();
@@ -31,19 +31,62 @@ namespace TinyApp
             // TestDisplayNHVN();
 
             // Oximeter
-            // TestOximeter();
+            //TestOximeter();
 
-             // Test max o 
-             // TestMaxO();
+            // Test max o 
+            // TestMaxO();
 
             // Display N18
             // TestDisplayN18();
 
             // DisplayT43
-            TestDisplayT43();
+            //TestDisplayT43();
+
+            //test xbee (s2b)
+            //TestXbee();
+
+
         }
 
         #region Testing
+        /// <summary>
+        /// Testing method for XBeeAdapter module (function never returns)
+        /// </summary>
+
+        private static void TestXbee()
+        {
+            var xBeeAdapter = new XBeeAdapter(FEZSpiderII.Socket8.SerialPortName);
+
+            xBeeAdapter.Configure(9600,GHIElectronics.TinyCLR.Devices.SerialCommunication.SerialParity.None, GHIElectronics.TinyCLR.Devices.SerialCommunication.SerialStopBitCount.One, 8, GHIElectronics.TinyCLR.Devices.SerialCommunication.SerialHandshake.None);
+            Debug.WriteLine("port:" + xBeeAdapter.Port.PortName);
+            //send data
+            Thread th = new Thread(new ThreadStart(()=> {
+                byte b = 0;
+                while (true)
+                {
+                    xBeeAdapter.SerialWriter.WriteByte(b++);
+                    xBeeAdapter.SerialWriter.Store();
+                    Debug.WriteLine("Sent: " + b);
+
+                    Thread.Sleep(500);
+                }
+            }));
+            th.Start();
+            //received data
+            while (true)
+            {
+                var i = xBeeAdapter.SerialReader.Load(1);
+                if (i > 0)
+                {
+                    byte b = xBeeAdapter.SerialReader.ReadByte();
+                    Debug.WriteLine("Received: " + b);
+                }
+
+                Thread.Sleep(10);// always give the system time to think!
+            }
+            //xBeeAdapter.Port.Open();
+            //xBeeAdapter.Port.LineReceived += Port_LineReceived;
+        }
 
         /// <summary>
         /// Testing method for MaxO module
@@ -94,6 +137,7 @@ namespace TinyApp
         private static void TestSerialCameraL1(DisplayT35 lcd)
         {
             var camera = new SerialCameraL1(FEZRaptor.Socket4.SerialPortName);
+            camera.StartStreaming();
             while (true)
             {
                 if (camera.NewImageReady)
@@ -102,8 +146,9 @@ namespace TinyApp
                     lcd.Screen.DrawImage(bitmap, 0, 0);
                     break;
                 }
-                Thread.Sleep(200);
+                Thread.Sleep(1000);
             }
+            camera.StopStreaming();
         }
 
         /// <summary>
@@ -162,7 +207,7 @@ namespace TinyApp
         /// </summary>
         static void TestOximeter()
         {
-            PulseOximeter ox = new PulseOximeter(FEZRaptor.Socket10.SerialPortName);
+            PulseOximeter ox = new PulseOximeter(FEZSpiderII.Socket4.SerialPortName);
             ox.ProbeAttached += (sender, e) =>
             {
                 Debug.WriteLine("probe attached.");
@@ -172,6 +217,7 @@ namespace TinyApp
                 Debug.WriteLine("probe detached.");
             };
             ox.Heartbeat += (sender, e) => { Debug.WriteLine($"SPO: {e.SPO2} ,Pulse:{e.PulseRate}"); };
+            Thread.Sleep(Timeout.Infinite);
         }
 
         /// <summary>
@@ -233,33 +279,7 @@ namespace TinyApp
             Thread.Sleep(Timeout.Infinite);
         }
 
-        /// <summary>
-        /// Testing method for XBeeAdapter module (function never returns)
-        /// </summary>
-        static void TestXbee()
-        {
-            var xbee = new XBeeAdapter();
-            xbee.Configure(FEZRaptor.Socket4.SerialPortName);
-            while (true)
-            {
-                var count = xbee.Port.BytesReceived;
-                var serialReadBuffer = new Buffer(count);
-                //_Serialreadbuffer.Capacity
-                uint read = xbee._inStream.Read(serialReadBuffer, count, InputStreamOptions.None);
-                if (read > 0)
-                {
-                    var buffer = serialReadBuffer.Data;
-                    string stng = new string(Encoding.UTF8.GetChars(buffer));
-                    Debug.WriteLine(stng);
-                }
-                else
-                if (read <= 0)
-                {
-                    throw new InvalidOperationException("Failed to read all of the bytes from the port.");
-                }
-                Thread.Sleep(100);
-            }
-        }
+       
 
         #region Lcd Capacitive Touch Events
         /// <summary>

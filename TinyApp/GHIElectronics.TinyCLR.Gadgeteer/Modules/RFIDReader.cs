@@ -17,6 +17,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
         private SerialDevice port;
         private IOutputStream _outStream;
         private IInputStream _inStream;
+        private DataReader SerialReader;
+        private DataWriter SerialWriter;
         private Timer timer;
         private AutoResetEvent autoEvent;
 
@@ -55,7 +57,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
             port.Handshake = SerialHandshake.None;
             _outStream = port.OutputStream;
             _inStream = port.InputStream;
-
+            SerialWriter = new DataWriter(_outStream);
+            SerialReader = new DataReader(_inStream);
             this.port.ReadTimeout = new TimeSpan(0, 0, 0, 0, 10);
             //this.port.WriteTimeout = new TimeSpan(0, 0, 0, 0, 500);
 
@@ -87,11 +90,18 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		private void DoWork(object o) {
 			//this.read += this.port.Read(this.buffer, this.read, RFIDReader.MESSAGE_LENGTH - this.read);
             var count = this.port.BytesReceived;
-            var _Serialreadbuffer = new Buffer(count);
-            this.read += _inStream.Read(_Serialreadbuffer, count, InputStreamOptions.None);
+            //var _Serialreadbuffer = new Buffer(count);
+            var read = SerialReader.Load(count);
+            byte[] data = new byte[read];
             if (read > 0)
             {
-                buffer = _Serialreadbuffer.Data;
+                SerialReader.ReadBytes(data);
+                //Debug.WriteLine("Recieved: " + b);
+                //}
+                //this.read += _inStream.Read(_Serialreadbuffer, count, InputStreamOptions.None);
+                //if (read > 0)
+                //{
+                buffer = data;//_Serialreadbuffer.Data;
                 count = RFIDReader.MESSAGE_LENGTH - this.read;//_Serialreadbuffer.Capacity - read;
             }
 

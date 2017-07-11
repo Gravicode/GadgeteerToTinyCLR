@@ -2,6 +2,7 @@
 using GHIElectronics.TinyCLR.Devices.SerialCommunication;
 using GHIElectronics.TinyCLR.Storage.Streams;
 using System;
+using System.Diagnostics;
 using System.Threading;
 //using GTI = Gadgeteer.SocketInterfaces;
 using GTM = Gadgeteer.Modules;
@@ -24,7 +25,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
         private SerialDevice serialPort;
         private IOutputStream _outStream;
         private IInputStream _inStream;
-
+        private DataReader SerialReader;
+        private DataWriter SerialWriter;
 
         private HeartbeatEventHandler onHeartbeat;
 
@@ -79,6 +81,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
             serialPort.Handshake = SerialHandshake.None;
             _outStream = serialPort.OutputStream;
             _inStream = serialPort.InputStream;
+            SerialWriter = new DataWriter(_outStream);
+            SerialReader = new DataReader(_inStream);
             //this.serialPort.ReadTimeout = new TimeSpan(0, 0, 0, 0, 500);
             //this.serialPort.WriteTimeout = new TimeSpan(0, 0, 0, 0, 500);
             //this.serialPort.Open();
@@ -93,28 +97,41 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
             while (true) {
                 uint totalRead = 0;
+                for (int x = 0; x < 5; x++)
+                    data[x] = 0;
                 if (!sync) {
-                    uint b = this.serialPort.BytesReceived;
-                    if (b <= 0) {
-                        Thread.Sleep(100);
-                        continue;
+                    var i = SerialReader.Load(1);
+                    if (i > 0)
+                    {
+                        int b = this.SerialReader.ReadByte();
+                        if (b < 0)
+                        {
+                            Thread.Sleep(100);
+                            continue;
+                        }
+
+                        if (((b >> 7) & 0x1) != 1)
+                            continue;
+
+                        data[0] = (byte)b;
+                        
+                        totalRead = 1;
+                        sync = true;
                     }
-
-                    if (((b >> 7) & 0x1) != 1)
-                        continue;
-
-                    data[0] = (byte)b;
-                    totalRead = 1;
-                    sync = true;
+                   
                 }
 
                 while (totalRead < 5) {
-                    //int read = this._inStream.Read(data, totalRead, 5 - totalRead);
+                    /*
+                    var temp = new byte[5-totalRead];
+                    this.SerialReader.ReadBytes(temp);
+                    for (var x = totalRead; x < 5 - totalRead; x++)
+                    {
+                        data[x] = temp[x-totalRead];
+                    }*/
+                    var i = SerialReader.Load(5-totalRead);
                     
-                    var _Serialreadbuffer = new Buffer(totalRead);
-                    //_Serialreadbuffer.Capacity
-                    uint read = _inStream.Read(_Serialreadbuffer, 5 - totalRead, InputStreamOptions.None);
-                    if (read <= 0)
+                    if (i <= 0)
                     {
                         this.DebugPrint("Serial error");
                         sync = false;
@@ -128,8 +145,28 @@ namespace Gadgeteer.Modules.GHIElectronics {
 
                         continue;
                     }
+                    else
+                    {
+                        var temp = new byte[i];
+                        this.SerialReader.ReadBytes(temp);
+                        int startIdx = 0;
+                        for (int y = 0; y <= data.Length; y++)
+                        {
+                            if (data[y] == 0)
+                            {
+                                startIdx = y;
+                                break;
+                            }
+                        }
+                        for (int x = 0; x < temp.Length; x++)
+                        {
+                            data[startIdx] = temp[x];
+                            startIdx++;
+                        }
+                    }
 
-                    totalRead += read;
+                    totalRead += (uint)i;
+                    
                 }
 
                 if (((data[0] >> 7) & 0x1) != 1) {

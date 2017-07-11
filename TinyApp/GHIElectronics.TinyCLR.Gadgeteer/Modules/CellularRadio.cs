@@ -51,10 +51,14 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		private LineReceivedHandler onLineReceived;
 		private LineSentHandler onLineSent;
 
-		/// <summary>Represents the delegate used for the PinStateRequested event.</summary>
-		/// <param name="sender">The object that raised the event.</param>
-		/// <param name="pinState">Current state of the PIN</param>
-		public delegate void PinStateRequestedHandler(CellularRadio sender, PinState pinState);
+
+        private DataReader SerialReader;
+        private DataWriter SerialWriter;
+
+        /// <summary>Represents the delegate used for the PinStateRequested event.</summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="pinState">Current state of the PIN</param>
+        public delegate void PinStateRequestedHandler(CellularRadio sender, PinState pinState);
 
 		/// <summary>Represents the delegate used for the GsmNetworkRegistrationChanged event.</summary>
 		/// <param name="sender">The object that raised the event.</param>
@@ -344,6 +348,8 @@ namespace Gadgeteer.Modules.GHIElectronics {
             serial.Handshake = SerialHandshake.None;
             _outStream = serial.OutputStream;
             _inStream = serial.InputStream;
+            SerialWriter = new DataWriter(serial.OutputStream);
+            SerialReader = new DataReader(serial.InputStream);
 
             this.serial.ReadTimeout = new TimeSpan(0, 0, 0, 0, 10);
             //this.port.WriteTimeout = new TimeSpan(0, 0, 0, 0, 500);
@@ -352,11 +358,14 @@ namespace Gadgeteer.Modules.GHIElectronics {
 			this.serial.Handshake = Handshake.RequestToSend;
 			this.serial.Open();
             */
-            var bf = new Buffer(Encoding.UTF8.GetBytes("AT\r"));
-            this._outStream.Write(bf);
+            var data = Encoding.UTF8.GetBytes("AT\r");
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+            //var bf = new Buffer(Encoding.UTF8.GetBytes("AT\r"));
+            //this._outStream.Write(bf);
             //this.serial.Write(Encoding.UTF8.GetBytes("AT\r"), 0, 3);
 
-			Thread.Sleep(250);
+            Thread.Sleep(250);
 
 			this.powerOn = this.serial.BytesReceived != 0;
 
@@ -1053,20 +1062,29 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		private void ReadIn() {
 			if (this.serial.BytesReceived == 0)
 				return;
-            var bf = new Buffer(this.buffer);
-            var read = this._inStream.Read(bf,(uint)this.buffer.Length,InputStreamOptions.None);
-			//var read = this.serial.Read(this.buffer, 0, this.buffer.Length);
+            var bf = SerialReader.Load((uint)this.buffer.Length);
+            if (bf > 0)
+            {
+                 SerialReader.ReadBytes(this.buffer);
+                //Debug.WriteLine("Recieved: " + b);
+            }
+            //var bf = new Buffer(this.buffer);
+            //var read = this._inStream.Read(bf,(uint)this.buffer.Length,InputStreamOptions.None);
+            //var read = this.serial.Read(this.buffer, 0, this.buffer.Length);
 
-			for (var i = 0; i < read; i++)
+            for (var i = 0; i < bf; i++)
 				this.responseBuffer += (char)this.buffer[i];
 		}
 
 		private void WriteLine(string line) {
-			var buffer = new Buffer( Encoding.UTF8.GetBytes(line));
-            this._outStream.Write(buffer);
-			//this.serial.Write(buffer, 0, buffer.Length);
+            var data = Encoding.UTF8.GetBytes(line);
+            SerialWriter.WriteBytes(data);
+            SerialWriter.Store();
+            //var buffer = new Buffer( Encoding.UTF8.GetBytes(line));
+            //this._outStream.Write(buffer);
+            //this.serial.Write(buffer, 0, buffer.Length);
 
-			this.OnLineSent(this, line);
+            this.OnLineSent(this, line);
 		}
 
 		private bool ExtractLine(ref string line) {
