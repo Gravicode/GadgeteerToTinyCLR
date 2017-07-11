@@ -19,10 +19,10 @@ namespace TinyApp
         public static void Main()
         {
             // DisplayT35  
-            var Lcd = TestDisplayT35();
+            //var Lcd = TestDisplayT35();
 
             // camera serial
-            TestSerialCameraL1(Lcd);
+            //TestSerialCameraL1(Lcd);
 
             // Led 7 colors
             // TestLed7C();
@@ -45,10 +45,24 @@ namespace TinyApp
             //test xbee (s2b)
             //TestXbee();
 
-
+            //test rfid reader
+            TestRfid();
         }
 
+        
+
         #region Testing
+        
+        private static void TestRfid()
+        {
+            RFIDReader rfid = new RFIDReader(FEZRaptor.Socket11.SerialPortName);
+            rfid.IdReceived += (RFIDReader sender, string e)=>
+            {
+                Debug.WriteLine(e);
+            };
+            Thread.Sleep(Timeout.Infinite);
+        }
+        
         /// <summary>
         /// Testing method for XBeeAdapter module (function never returns)
         /// </summary>

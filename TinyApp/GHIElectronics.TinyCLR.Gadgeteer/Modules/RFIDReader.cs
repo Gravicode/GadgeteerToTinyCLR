@@ -88,41 +88,37 @@ namespace Gadgeteer.Modules.GHIElectronics {
 		}
 
 		private void DoWork(object o) {
-			//this.read += this.port.Read(this.buffer, this.read, RFIDReader.MESSAGE_LENGTH - this.read);
-            var count = this.port.BytesReceived;
-            //var _Serialreadbuffer = new Buffer(count);
-            var read = SerialReader.Load(count);
-            byte[] data = new byte[read];
-            if (read > 0)
-            {
-                SerialReader.ReadBytes(data);
-                //Debug.WriteLine("Recieved: " + b);
-                //}
-                //this.read += _inStream.Read(_Serialreadbuffer, count, InputStreamOptions.None);
-                //if (read > 0)
-                //{
-                buffer = data;//_Serialreadbuffer.Data;
-                count = RFIDReader.MESSAGE_LENGTH - this.read;//_Serialreadbuffer.Capacity - read;
-            }
+            //this.read += this.port.Read(this.buffer, this.read, RFIDReader.MESSAGE_LENGTH - this.read);
+            var justread = SerialReader.Load(RFIDReader.MESSAGE_LENGTH);
+            this.read += justread;
 
             if (this.read != RFIDReader.MESSAGE_LENGTH)
-				return;
+                return;
 
-			for (int i = 1; i < 10; i += 2)
-				this.checksum ^= this.ASCIIToNumber(this.buffer[i], this.buffer[i + 1]);
+            if (justread > 0)
+            {
+                SerialReader.ReadBytes(buffer);
+            }
 
-			if (this.buffer[0] == 0x02 && this.buffer[12] == 0x03 && this.checksum == this.buffer[11]) {
-				this.OnIdReceived(this, new string(Encoding.UTF8.GetChars(this.buffer, 1, 10)));
-			}
-			else {
-				//this.port.DiscardInBuffer();
-              
-				this.OnMalformedIdReceived(this, null);
-			}
 
-			this.read = 0;
-			this.checksum = 0;
-		}
+            for (int i = 1; i < 10; i += 2)
+                this.checksum ^= this.ASCIIToNumber(this.buffer[i], this.buffer[i + 1]);
+
+            if (this.buffer[0] == 0x02 && this.buffer[12] == 0x03 && this.checksum == this.buffer[11])
+            {
+                this.OnIdReceived(this, new string(Encoding.UTF8.GetChars(this.buffer, 1, 10)));
+            }
+            else
+            {
+                this.SerialReader.DetachBuffer();
+
+                this.OnMalformedIdReceived(this, null);
+            }
+
+            this.read = 0;
+            this.checksum = 0;
+
+        }
 
 		private void OnIdReceived(RFIDReader sender, string e) {
 			if (this.onIdReceived == null)
