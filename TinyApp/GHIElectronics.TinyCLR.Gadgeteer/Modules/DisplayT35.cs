@@ -11,9 +11,11 @@ namespace Gadgeteer.Modules.GHIElectronics {
 	/// <summary>A DisplayTE35 module for Microsoft .NET Gadgeteer.</summary>
 	public class DisplayT35 : GTM.Module {
 		private GpioPin backlightPin;
+        public const int ScreenWidth = 320;     // 0- 319
+        public const int ScreenHeight = 240;    // 0 - 239
 
-		/// <summary>Whether or not the backlight is enabled.</summary>
-		public bool BacklightEnabled {
+        /// <summary>Whether or not the backlight is enabled.</summary>
+        public bool BacklightEnabled {
 			get {
 				return this.backlightPin.Read()==GpioPinValue.High;
 			}
@@ -37,14 +39,14 @@ namespace Gadgeteer.Modules.GHIElectronics {
             //Enables the display
             displayController.ApplySettings(new LcdControllerSettings
             {
-                Width = 320,
-                Height = 240,
+                Width = ScreenWidth,
+                Height = ScreenHeight,
                 PixelClockRate = 16625,
                 PixelPolarity = true,
                 OutputEnablePolarity = true,
                 OutputEnableIsFixed = true,
                 HorizontalFrontPorch = 51,
-                HorizontalBackPorch = 27,
+                HorizontalBackPorch = 29, // Was 27 causing 2 pixel shift x axis
                 HorizontalSyncPulseWidth = 41,
                 HorizontalSyncPolarity = false,
                 VerticalFrontPorch = 16,
