@@ -50,7 +50,7 @@ namespace Gadgeteer.Modules.GHIElectronics {
                 HorizontalSyncPulseWidth = 41,
                 HorizontalSyncPolarity = false,
                 VerticalFrontPorch = 16,
-                VerticalBackPorch = 8,
+                VerticalBackPorch = 3, // Was 8
                 VerticalSyncPulseWidth = 10,
                 VerticalSyncPolarity = false,
             });
